@@ -17,9 +17,8 @@
         @login_excepted 或者 @login_excepted()
         ```
 3. 如果需要登录之后跳转到原先的页面，需要在登录view中使用:<br>
-        ```
-        path = request.GET.get('next')
-        中间代码省略
-        login(request, user)
-                return redirect(path)
-        ```
+        ```path = request.GET.get('next')```
+        ```中间代码省略```
+        ```login(request, user)```
+                ```return redirect(path)```
+        
