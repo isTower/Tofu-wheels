@@ -8,9 +8,10 @@
 
 from functools import wraps
 
+
 from django.conf import settings
 from django.shortcuts import HttpResponseRedirect
-from django.urls import URLPattern
+from django.urls import RegexURLPattern  # django2.0以上替换为：from django.urls import URLPattern
 
 
 from . import urls
@@ -27,14 +28,16 @@ class MiddlewareLoginRequired(object):
     def __init__(self, get_response):
         self.get_response = get_response
 
+
     def __call__(self, request, *args, **kwargs):
         response = self.get_response(request)
         user_hash = request.session.get('_auth_user_hash','')
-        url = request.path
-        if url in self.exclude_url_path():
-            return response
-        elif not user_hash:
-            return HttpResponseRedirect(settings.LOGIN_URL + '?next=' + url)
+        if not user_hash:
+            url = request.path
+            if url in self.exclude_url_path():
+                return response
+            else:
+                return HttpResponseRedirect(settings.LOGIN_URL + '?next=' + url)
         return response
 
     @staticmethod
@@ -47,15 +50,16 @@ class MiddlewareLoginRequired(object):
         """
         获取所有的view函数和url的映射关系，
         :param patterns: urlpatterns
-        :param pre_fix: 
+        :param pre_fix:
         :param result: 字典，{view函数:url}
-        :return: 
+        :return:
         """
 
         for item in patterns:
-            part = item.pattern.regex.pattern.strip("^$")
-            if isinstance(item, URLPattern):
-                url_path = item.pattern.regex.pattern.strip("^$").replace('\\', "")
+            part = item.regex.pattern.strip("^$") #django2.0以上替换为：part = item.pattern.regex.pattern.strip("^$")
+            if isinstance(item, RegexURLPattern): #django2.0以上替换为：if isinstance(item, URLPattern):
+                # django2.0以上替换为：url_path = item.pattern.regex.pattern.strip("^$").replace('\\', "")
+                url_path = item.regex.pattern.strip("^$").replace('\\', "")
                 view_func = item.callback.__module__ + '.' + item.callback.__name__
                 if view_func.startswith(('django',)):
                     continue
