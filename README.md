@@ -1,7 +1,7 @@
 # django中间件，用来验证用户登录
 
 ### 功能<br>
-对django除了内置模块的所有url进行登录认证，没有登录则重定向到登录页面，
+对django除了内置模块的所有url进行登录认证，没有登录则重定向到登录页面，<br>
 提供login_excepted装饰器，使用login_excepted函数装饰的view不需要登录即可正常访问
 
 ### 用法<br>
